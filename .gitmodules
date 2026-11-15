@@ -1,0 +1,6 @@
+[submodule "tpl/caeror"]
+	path = tpl/caeror
+	url = https://github.com/scram-lab/caeror.git
+[submodule "tpl/raja"]
+	path = tpl/raja
+	url = https://github.com/LLNL/RAJA.git
