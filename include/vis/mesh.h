@@ -11,6 +11,10 @@ class UniformMesh {
   UniformMesh(double min, double max, caeror::CaerorIndexType num_bins)
       : min_(min), max_(max), num_bins_(num_bins) {}
 
+  RAJA_HOST_DEVICE caeror::CaerorIndexType GetNumBins() const {
+    return num_bins_;
+  }
+
   RAJA_HOST_DEVICE bool InBounds(const double value) const {
     return value >= min_ && value < max_;
   }
