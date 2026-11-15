@@ -1,0 +1,44 @@
+#pragma once
+
+#include <caeror/raja_layouts.h>
+
+#include "vis/indexes.h"
+#include "vis/mesh.h"
+
+namespace vis {
+template <typename... MeshPhases>
+class HistogramTallyData {
+ public:
+  using TallyLayout = caeror::CaerorLayout<MeshPhases...>;
+  using TallyView = caeror::CaerorWritableView<double, TallyLayout>;
+
+  explicit HistogramTallyData(RAJA::resources::Resource& resource,
+                              const UniformMesh<MeshPhases>&... meshes)
+      : resource_(resource),
+        layout_(meshes.GetNumBins()...),
+        meshes_(meshes...) {
+    tally_data_ = resource_.allocate<double>(layout_.size());
+    resource_.memset(tally_data_, 0, layout_.size() * sizeof(double));
+    resource_.wait();
+  }
+
+  HistogramTallyData(const HistogramTallyData&) = delete;
+  HistogramTallyData& operator=(const HistogramTallyData&) = delete;
+  HistogramTallyData(HistogramTallyData&& other) = delete;
+  HistogramTallyData& operator=(HistogramTallyData&& other) = delete;
+
+  ~HistogramTallyData() {
+    if (tally_data_) {
+      resource_.wait();
+      resource_.deallocate(tally_data_);
+      tally_data_ = nullptr;
+    }
+  }
+
+ private:
+  RAJA::resources::Resource& resource_;
+  TallyLayout layout_;
+  camp::tuple<UniformMesh<MeshPhases>...> meshes_;
+  double* tally_data_ = nullptr;
+};
+}  // namespace vis
