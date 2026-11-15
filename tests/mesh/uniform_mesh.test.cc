@@ -5,17 +5,15 @@
 
 #include "vis/mesh.h"
 
-namespace {
-
 TEST(UniformMesh, MapsCoordinatesToBins) {
   const vis::UniformMesh<vis::index::X> mesh(0.0, 10.0, 4);
 
-  EXPECT_EQ(mesh.GetIndex(0.0), vis::index::X{0});
-  EXPECT_EQ(mesh.GetIndex(1.25), vis::index::X{0});
-  EXPECT_EQ(mesh.GetIndex(2.5), vis::index::X{1});
-  EXPECT_EQ(mesh.GetIndex(5.0), vis::index::X{2});
-  EXPECT_EQ(mesh.GetIndex(7.5), vis::index::X{3});
-  EXPECT_EQ(mesh.GetIndex(std::nextafter(10.0, 0.0)), vis::index::X{3});
+  EXPECT_EQ(mesh.GetNextBin(-1.0, 0.0), vis::index::X{0});
+  EXPECT_EQ(mesh.GetNextBin(0.0, 0.0), vis::index::X{0});
+  EXPECT_EQ(mesh.GetNextBin(1.25, 0.0), vis::index::X{0});
+  EXPECT_EQ(mesh.GetNextBin(2.5, 0.0), vis::index::X{1});
+  EXPECT_EQ(mesh.GetNextBin(10.0, 0.0), vis::index::X{3});
+  EXPECT_EQ(mesh.GetNextBin(10.1, 0.0), vis::index::X{3});
 }
 
 TEST(UniformMesh, BoundsIncludeMinimumAndExcludeMaximum) {
@@ -35,4 +33,18 @@ TEST(UniformMesh, NonFiniteCoordinatesAreOutOfBounds) {
   EXPECT_FALSE(mesh.InBounds(std::numeric_limits<double>::quiet_NaN()));
 }
 
-}  // namespace
+TEST(UniformMesh, SelectsBinInDirectionOfTravel) {
+  const vis::UniformMesh<vis::index::X> mesh(0.0, 3.0, 3);
+  EXPECT_EQ(mesh.GetNextBin(1.0, 1.0), vis::index::X{1});
+  EXPECT_EQ(mesh.GetNextBin(1.0, -1.0), vis::index::X{0});
+  EXPECT_DOUBLE_EQ(mesh.GetExitDistance(vis::index::X{1}, 1.0, 0.5), 2.0);
+  EXPECT_TRUE(std::isinf(mesh.GetExitDistance(vis::index::X{1}, 1.0, 0.0)));
+  EXPECT_DOUBLE_EQ(mesh.GetExitDistance(vis::index::X{0}, 1.0, -0.5), 2.0);
+}
+
+TEST(UniformMesh, NonspatialPhasesIgnoreUpdate) {
+  const vis::UniformMesh<vis::index::Energy> energy(0.0, 10.0, 2);
+  EXPECT_EQ(energy.GetNextBin(5.0, -1.0), vis::index::Energy{1});
+  EXPECT_EQ(energy.GetNextBin(5.0, 1.0), vis::index::Energy{1});
+  EXPECT_TRUE(std::isinf(energy.GetExitDistance(vis::index::Energy{1}, 5.0, 1.0)));
+}
