@@ -4,6 +4,7 @@
 
 #include "vis/indexes.h"
 #include "vis/mesh.h"
+#include "vis/histogram_tally_state.h"
 
 namespace vis {
 template <typename... MeshPhases>
@@ -11,6 +12,8 @@ class HistogramTallyData {
  public:
   using TallyLayout = caeror::CaerorLayout<MeshPhases...>;
   using TallyView = caeror::CaerorWritableView<double, TallyLayout>;
+  using TallyState = HistogramTallyState<MeshPhases...>;
+  using Meshes = camp::tuple<UniformMesh<MeshPhases>...>;
 
   explicit HistogramTallyData(RAJA::resources::Resource& resource,
                               const UniformMesh<MeshPhases>&... meshes)
@@ -35,10 +38,14 @@ class HistogramTallyData {
     }
   }
 
+  RAJA_HOST_DEVICE TallyState GetState() const {
+    return TallyState{TallyView(tally_data_, layout_), meshes_};
+  }
+
  private:
   RAJA::resources::Resource& resource_;
   TallyLayout layout_;
-  camp::tuple<UniformMesh<MeshPhases>...> meshes_;
+  Meshes meshes_;
   double* tally_data_ = nullptr;
 };
 }  // namespace vis
