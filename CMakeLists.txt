@@ -23,7 +23,6 @@ include(cmake/VisSetupRAJA.cmake)
 include(cmake/VisSetupCaeror.cmake)
 
 add_subdirectory("${VIS_SRC_DIR}")
-target_compile_features(vis PRIVATE cxx_std_23)
 
 if(VIS_BUILD_TESTS)
   add_subdirectory("${VIS_TESTS_DIR}")

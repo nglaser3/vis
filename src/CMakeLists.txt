@@ -3,9 +3,9 @@
 # --------------------------------------------------------------------------- #
 
 blt_add_executable(
-  NAME vis
+  NAME vis-leakas
   SOURCES
-    main.cc
+    leakas.cc
   INCLUDES
     "${VIS_INCLUDE_DIR}"
   DEPENDS_ON
