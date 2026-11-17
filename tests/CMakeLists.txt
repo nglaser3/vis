@@ -6,6 +6,7 @@ blt_add_executable(
   NAME vis_tests
   SOURCES
     material/material_bank.test.cc
+    solver/particle_stepper.test.cc
     tally/histogram_tally_state.test.cc
     mesh/uniform_mesh.test.cc
   INCLUDES
