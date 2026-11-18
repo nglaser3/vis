@@ -17,4 +17,10 @@ RAJA_INDEX_VALUE_T(Azi, caeror::CaerorIndexType, "Azimuthal Index");
 RAJA_INDEX_VALUE_T(Energy, caeror::CaerorIndexType, "Energy Index");
 
 RAJA_INDEX_VALUE_T(Time, caeror::CaerorIndexType, "Time Index");
+
+RAJA_INDEX_VALUE_T(PID, caeror::CaerorIndexType, "Particle ID");
+
+enum ParticleData : caeror::CaerorIndexType {
+  x, y, z, mu, azi, e, t
+};
 }  // namespace vis::index
