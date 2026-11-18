@@ -29,7 +29,7 @@ class UniformMesh {
   }
 
   RAJA_HOST_DEVICE bool InBounds(const double value) const {
-    return value >= min_ && value < max_;
+    return value >= min_ && value <= max_;
   }
 
   RAJA_HOST_DEVICE IndexType GetNextBin(double start, double update) const {
