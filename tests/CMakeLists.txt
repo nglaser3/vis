@@ -15,6 +15,7 @@ blt_add_executable(
   DEPENDS_ON
     caeror
     RAJA
+    conduit_relay
     gtest
 )
 

@@ -1,9 +1,11 @@
 #pragma once
 
 #include <caeror/raja_layouts.h>
+#include <conduit.hpp>
 
 #include <cmath>
 #include <limits>
+#include <string>
 #include <type_traits>
 
 #include "vis/indexes.h"
@@ -51,6 +53,15 @@ class UniformMesh {
     const double edge_location =
         bin_edge == num_bins_ ? max_ : static_cast<double>(bin_edge) * GetBinWidth() + min_;
     return (edge_location - start) / update;
+  }
+
+  void WriteOut(conduit::Node& node) const {
+    const auto name = IndexType::getName();
+    const auto phase = name.substr(0, name.find(' '));
+    auto& mesh = node["meshes/" + phase];
+    mesh["min"] = min_;
+    mesh["max"] = max_;
+    mesh["num_bins"] = num_bins_;
   }
 
  private:

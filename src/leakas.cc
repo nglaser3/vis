@@ -3,6 +3,9 @@
 #include <RAJA/RAJA.hpp>
 #include <RAJA/util/Timer.hpp>
 
+#include <conduit.hpp>
+#include <conduit_relay.hpp>
+
 #include <caeror/caeror_geometry.h>
 #include <caeror/geometry_constructor.h>
 
@@ -69,4 +72,9 @@ int main() {
   solver.SolveSDE(resource, ds_scale, tally);
   timer.stop();
   std::print("Finished in {0} seconds\n", timer.elapsed());
+
+  conduit::Node node;
+  node["runtime"] = timer.elapsed();
+  tally.WriteOutResults(node, num_histories);
+  conduit::relay::io::save(node, "outputs/leakas.h5");
 }

@@ -1,6 +1,11 @@
 #pragma once
 
 #include <caeror/raja_layouts.h>
+#include <conduit.hpp>
+
+#include <array>
+#include <type_traits>
+#include <vector>
 
 #include "vis/indexes.h"
 #include "vis/mesh.h"
@@ -44,6 +49,23 @@ class HistogramTallyData {
 
   RAJA_HOST_DEVICE TallyState GetState() const {
     return TallyState{TallyView(tally_data_, layout_), meshes_};
+  }
+
+  void WriteOutResults(conduit::Node& output, caeror::CaerorIndexType num_histories) {
+    double* write_out_data = new double[layout_.size()];
+    resource_.memcpy(write_out_data, tally_data_, layout_.size() * sizeof(double));
+    resource_.wait();
+
+    const double bin_volume = (1.0 * ... * camp::get<UniformMesh<MeshPhases>>(meshes_).GetBinWidth());
+    const double normalization = static_cast<double>(num_histories) * bin_volume;
+    for (caeror::CaerorIndexType i = 0; i < layout_.size(); ++i) {
+      write_out_data[i] /= normalization;
+    }
+
+    output["tally/mean"].set(write_out_data, static_cast<conduit::index_t>(layout_.size()));
+    delete[] write_out_data;
+
+    (camp::get<UniformMesh<MeshPhases>>(meshes_).WriteOut(output), ...);
   }
 
  private:
