@@ -2,7 +2,7 @@
 # Root level CMake file for vis
 # --------------------------------------------------------------------------- #
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.26)
 
 project(
   vis
@@ -21,6 +21,7 @@ endif()
 
 include(cmake/VisSetupRAJA.cmake)
 include(cmake/VisSetupCaeror.cmake)
+include(cmake/VisSetupConduit.cmake)
 
 add_subdirectory("${VIS_SRC_DIR}")
 
