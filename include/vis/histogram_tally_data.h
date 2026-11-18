@@ -21,8 +21,7 @@ class HistogramTallyData {
         layout_(meshes.GetNumBins()...),
         meshes_(meshes...) {
     tally_data_ = resource_.allocate<double>(layout_.size());
-    resource_.memset(tally_data_, 0, layout_.size() * sizeof(double));
-    resource_.wait();
+    Reset();
   }
 
   HistogramTallyData(const HistogramTallyData&) = delete;
@@ -36,6 +35,11 @@ class HistogramTallyData {
       resource_.deallocate(tally_data_);
       tally_data_ = nullptr;
     }
+  }
+
+  void Reset() {
+    resource_.memset(tally_data_, 0, layout_.size() * sizeof(double));
+    resource_.wait();
   }
 
   RAJA_HOST_DEVICE TallyState GetState() const {

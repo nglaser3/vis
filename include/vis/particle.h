@@ -12,6 +12,7 @@ struct Particle : caeror::Particle {
   double azi;
   double energy;
   double time;
+  bool alive;
 
   caeror::CaerorIndexType seed;
 

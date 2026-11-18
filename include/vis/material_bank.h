@@ -87,7 +87,7 @@ class MaterialBank {
     return MaterialView(scatter_ratio_, layout_);
   }
 
-  RAJA_HOST_DEVICE double SampleScatteringCosine(double xi, caeror::MaterialID m, const MaterialView& eta, const MaterialView& muc) {
+  static RAJA_HOST_DEVICE double SampleScatteringCosine(double xi, caeror::MaterialID m, const MaterialView& eta, const MaterialView& muc) {
     const double cutoff = muc(m);
     const double screening = eta(m);
     const double scaled_xi = (1 + cutoff) * xi;

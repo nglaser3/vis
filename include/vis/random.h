@@ -43,7 +43,7 @@ namespace vis {
     auto z0  = mag * cos(two_pi * u2) + mean;
     auto z1  = mag * sin(two_pi * u2) + mean;
 
-    return {z0, z1};
+    return camp::tuple<double, double>{z0, z1};
   }
   
 } // namespace vis

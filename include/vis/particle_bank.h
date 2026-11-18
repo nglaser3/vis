@@ -33,11 +33,11 @@ namespace vis {
     ParticleBank(ParticleBank&& other) = delete;
     ParticleBank& operator=(ParticleBank&& other) = delete;
 
-    ParticleView GetParticleView() {
+    ParticleView GetParticleView() const {
       return ParticleView(particle_data_, layout_);
     }
 
-    static RAJA_HOST_DEVICE Particle InitParticle(index::PID pid, ParticleView& view) {
+    static RAJA_HOST_DEVICE Particle InitParticle(index::PID pid, const ParticleView& view) {
       Particle p{};
       using vis::index::ParticleData;
       p.x = view(pid, ParticleData::x);
@@ -49,6 +49,7 @@ namespace vis {
       p.time = view(pid, ParticleData::t);
       p.UpdateDirection(p.mu, p.azi);
       p.seed = *pid;
+      p.alive = true;
       return p;
     }
 
