@@ -4,3 +4,6 @@
 [submodule "tpl/raja"]
 	path = tpl/raja
 	url = https://github.com/LLNL/RAJA.git
+[submodule "tpl/conduit"]
+	path = tpl/conduit
+	url = git@github.com:llnl/conduit.git
