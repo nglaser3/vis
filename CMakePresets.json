@@ -15,12 +15,24 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "rel-omp",
+      "inherits": "release",
+      "cacheVariables": {
+        "ENABLE_OPENMP": "ON",
+        "ENABLE_CUDA": "OFF"
+      }
     }
   ],
   "buildPresets": [
     {
       "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "rel-omp",
+      "configurePreset": "rel-omp"
     }
   ],
   "testPresets": [
@@ -39,6 +51,13 @@
       "steps": [
         {"type": "configure", "name": "release"},
         {"type": "build", "name": "release"}
+      ]
+    },
+    {
+      "name": "rel-omp",
+      "steps": [
+        {"type": "configure", "name": "rel-omp"},
+        {"type": "build", "name": "rel-omp"}
       ]
     }
   ]
