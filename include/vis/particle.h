@@ -10,6 +10,7 @@ namespace vis {
 struct Particle : caeror::Particle {
   double mu;
   double azi;
+  caeror::CaerorIndexType seed;
 
   RAJA_HOST_DEVICE void UpdateDirection(double mu_, double azi_) {
     mu = mu_;
