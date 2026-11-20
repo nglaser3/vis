@@ -13,3 +13,15 @@ blt_add_executable(
     RAJA
     conduit_relay
 )
+
+blt_add_executable(
+  NAME vis-leakas-3d
+  SOURCES
+    leakas_3d.cc
+  INCLUDES
+    "${VIS_INCLUDE_DIR}"
+  DEPENDS_ON
+    caeror
+    RAJA
+    conduit_relay
+)
